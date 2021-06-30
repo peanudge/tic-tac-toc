@@ -57,5 +57,30 @@ body {
 
 #info-panel {
   color: white;
+
   text-align: center;
+}
+
+#util-panel {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  background-color: transparent;
+  color: white;
+  font-size: 30px;
+  border-style: none;
+}
+
+.btn:hover {
+  color: black;
+}
+
+#start-btn {
+  margin-right: 50px;
+}
+
+#reset-btn {
 }

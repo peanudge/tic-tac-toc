@@ -14,7 +14,6 @@ export class InformationView {
 
 class Template {
     getScores(score) {
-        console.log(score);
         return `<div class="score-panel">
             <h1 class="score">
                 ${score['O']} 

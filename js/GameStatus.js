@@ -10,15 +10,10 @@ const RESULT_WIN_X = "X";
 const RESULT_DRAW = "DRAW";
 const RESULT_YET = "";
 
-const GAME_RUNNING = "running";
-const GAME_STOP = "stop";
-
-
 const tag = "[GameStatus]"
 
 export class GameStatus {
     constructor(size = 3) {
-        this.statusFlag = GAME_RUNNING;
         this.size = size;
         this.initialize();
         this.score = {
@@ -28,6 +23,10 @@ export class GameStatus {
     }
 
     reset() {
+        this.score = {
+            [RESULT_WIN_O]: 0,
+            [RESULT_WIN_X]: 0
+        };
         this.initialize();   
     }
 
@@ -62,18 +61,6 @@ export class GameStatus {
         return true;
     }
     
-    applyResult(result) {
-        this.result = result;
-        if(result === RESULT_WIN_O) {
-            this.score[RESULT_WIN_O] += 1;
-        } else if (result === RESULT_WIN_X) {
-            this.score[RESULT_WIN_X] += 1;
-        } else if (result === RESULT_DRAW) {
-            this.score[RESULT_WIN_O] += 1;
-            this.score[RESULT_WIN_X] += 1;
-        }
-    }
-
     checkFinish() {
         if(this.result !== RESULT_YET) {
             return true;
@@ -91,7 +78,7 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
+                this._applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
         }
@@ -108,7 +95,7 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
+                this._applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
         }
@@ -130,7 +117,7 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
+                this._applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
         }
@@ -145,12 +132,11 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
+                this._applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
         }
 
-        // check draw
         let isDraw = true;
         for(let r = 0; r < this.size; r++) {
             for(let c = 0; c < this.size; c++) {
@@ -165,10 +151,24 @@ export class GameStatus {
         }
 
         if(isDraw) {
-            this.applyResult(RESULT_DRAW);
+            this._applyResult(RESULT_DRAW);
             return true;
         }
         
         return false;
     }
+
+    _applyResult(result) {
+        this.result = result;
+        if(result === RESULT_WIN_O) {
+            this.score[RESULT_WIN_O] += 1;
+        } else if (result === RESULT_WIN_X) {
+            this.score[RESULT_WIN_X] += 1;
+        } else if (result === RESULT_DRAW) {
+            this.score[RESULT_WIN_O] += 1;
+            this.score[RESULT_WIN_X] += 1;
+        }
+    }
+
+
 }
