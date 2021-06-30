@@ -1,3 +1,4 @@
+const tag = "[GameView]"
 export class GameView  {
     constructor(template = new Template()) {
         this.element = document.querySelector("#game");
@@ -6,7 +7,9 @@ export class GameView  {
     }
 
     eventsBinding() {
+        console.log(tag, "eventsBinding");
         this.delegateEvent("click", ".box", (event) => this.handleClick(event));
+        // TODO: Register Another Events.
     }
 
     delegateEvent(eventName, selector, handler) {
@@ -21,6 +24,14 @@ export class GameView  {
         this.on(eventName, emitEvent);
     }
 
+    handleClick(event) {
+        const {row, col} = event.target.dataset;
+        this.emit("@put", {
+            row, 
+            col
+        })
+    }
+
     emit(eventName, value) {
         const event = new CustomEvent(eventName, {detail: value});
         this.element.dispatchEvent(event);
@@ -32,14 +43,6 @@ export class GameView  {
 
     show(data = []) {
         this.element.innerHTML = this.template.getBoard(data);
-    }
-
-    handleClick(event) {
-        const {row, col} = event.target.dataset;
-        this.emit("@put", {
-            row, 
-            col
-        })
     }
 }
 
