@@ -1,12 +1,14 @@
 import { GameView } from './views/GameView.js';
 import { Controller} from "./Controller.js";
 import { GameStatus } from './GameStatus.js';
+import { InformationView } from './views/InformationView.js';
 
 function main() {
     const views = {
-        gameView: new GameView()
+        gameView: new GameView(),
+        infoView: new InformationView()
     }
-    const gameStatus = new GameStatus();
+    const gameStatus = new GameStatus(4);
     new Controller(gameStatus, views);
 }
 

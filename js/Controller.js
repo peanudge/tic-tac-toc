@@ -1,10 +1,13 @@
 const tag = "[Controller]";
 
 export class Controller {
-    constructor(gameStatus, {gameView}){
+    constructor(gameStatus, {gameView, infoView}){
         console.log(tag, "constructor");
-        this.gameView = gameView;
         this.gameStatus = gameStatus;
+
+        this.gameView = gameView;
+        this.infoView = infoView;
+        
         this.subscribeViewEvents();
         this.render();
     }
@@ -17,12 +20,21 @@ export class Controller {
     }
 
     put(row, col) {
-        console.log(tag, "Put Event", row, col)
         this.gameStatus.put(row, col);
+        const finish = this.gameStatus.checkFinish();
+        if(finish) {
+            // TODO: 다시하기 팝업 보여주기.
+            console.log("끝!");
+        }
         this.render();
     }
 
     render() {
-        this.gameView.show(this.gameStatus.data);
+        const {
+            data, scores, winner
+        } = this.gameStatus;
+
+        this.gameView.show(data);
+        this.infoView.show(scores, winner);
     }
 }
