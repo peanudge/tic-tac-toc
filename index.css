@@ -1,0 +1,56 @@
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #4f8d90;
+  height: 100vh;
+}
+.title {
+  color: white;
+  border-bottom: 5px dashed peru;
+}
+#game {
+  width: 500px;
+  height: 500px;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.row:not(:last-child) {
+  border-bottom: 2px solid peru;
+}
+
+.box {
+  position: relative;
+  width: 33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+}
+
+.box:not(:last-child) {
+  border-right: 2px solid peru;
+}
