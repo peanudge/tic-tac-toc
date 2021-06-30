@@ -4,7 +4,6 @@ export class Controller {
     constructor(gameStatus, {gameView, infoView}){
         console.log(tag, "constructor");
         this.gameStatus = gameStatus;
-
         this.gameView = gameView;
         this.infoView = infoView;
         
@@ -20,21 +19,20 @@ export class Controller {
     }
 
     put(row, col) {
-        this.gameStatus.put(row, col);
-        const finish = this.gameStatus.checkFinish();
-        if(finish) {
-            // TODO: 다시하기 팝업 보여주기.
-            console.log("끝!");
+        const success = this.gameStatus.put(row, col);
+        if(success) {
+            const finish = this.gameStatus.checkFinish();
+            
+            this.render();
         }
-        this.render();
     }
 
     render() {
         const {
-            data, scores, winner
+            data, score, result
         } = this.gameStatus;
 
         this.gameView.show(data);
-        this.infoView.show(scores, winner);
+        this.infoView.show(score, result);
     }
 }

@@ -8,7 +8,7 @@ function main() {
         gameView: new GameView(),
         infoView: new InformationView()
     }
-    const gameStatus = new GameStatus(4);
+    const gameStatus = new GameStatus(3);
     new Controller(gameStatus, views);
 }
 

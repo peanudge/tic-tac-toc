@@ -1,25 +1,30 @@
-const O_USER = "o_user";
-const X_USER = "x_user";
+const TURN_O = "O";
+const TURN_X = "X";
 
 const O_MARK = "O";
 const X_MARK = "X";
 const EMPTY_MARK = "";
 
-const WIN_O = "O";
-const WIN_X = "X";
-const DRAW = "DRAW";
-const NOT_YET = "";
+const RESULT_WIN_O = "O";
+const RESULT_WIN_X = "X";
+const RESULT_DRAW = "DRAW";
+const RESULT_YET = "";
 
-const SCORE_IDX_O = 0;
-const SCORE_IDX_X = 1;
+const GAME_RUNNING = "running";
+const GAME_STOP = "stop";
+
 
 const tag = "[GameStatus]"
 
 export class GameStatus {
     constructor(size = 3) {
+        this.statusFlag = GAME_RUNNING;
         this.size = size;
         this.initialize();
-        this.scores = [0,0];    
+        this.score = {
+            [RESULT_WIN_O]: 0,
+            [RESULT_WIN_X]: 0
+        };
     }
 
     reset() {
@@ -27,8 +32,8 @@ export class GameStatus {
     }
 
     initialize() {
-        this.turn = O_USER;
-        this.winner = NOT_YET;
+        this.turn = TURN_O;
+        this.result = RESULT_YET;
         this.data = [];
         for(let r = 0; r < this.size; r++) {
             const temp = [];
@@ -40,22 +45,40 @@ export class GameStatus {
     }
 
     put(row, col) {
+        if(this.result !== RESULT_YET) return false;
+        
         if(this.data[row][col] !== EMPTY_MARK) {
-            // NOTHING.
-            return;
+            return false;
         } 
 
-        if(this.turn === O_USER) {
+        if(this.turn === TURN_O) {
             this.data[row][col] = O_MARK;
-            this.turn = X_USER;
-        } else {
+            this.turn = TURN_X;
+        } else { // X Turn.
             this.data[row][col] = X_MARK;
-            this.turn = O_USER;
+            this.turn = TURN_O;
         }
+
+        return true;
     }
     
+    applyResult(result) {
+        this.result = result;
+        if(result === RESULT_WIN_O) {
+            this.score[RESULT_WIN_O] += 1;
+        } else if (result === RESULT_WIN_X) {
+            this.score[RESULT_WIN_X] += 1;
+        } else if (result === RESULT_DRAW) {
+            this.score[RESULT_WIN_O] += 1;
+            this.score[RESULT_WIN_X] += 1;
+        }
+    }
+
     checkFinish() {
-        console.log(tag, "checkFinsh");
+        if(this.result !== RESULT_YET) {
+            return true;
+        }
+
         for(let r = 0; r < this.size; r++){
             let first = this.data[r][0];
             if(first === EMPTY_MARK) continue;
@@ -68,7 +91,7 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.winner = first === O_MARK ? O_USER: X_USER;
+                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
         }
@@ -76,6 +99,7 @@ export class GameStatus {
         for(let c = 0; c < this.size; c++) {
             let first = this.data[0][c];
             if(first === EMPTY_MARK) continue;
+
             let isAnyLineSame = true;
             for(let r = 0; r < this.size; r++) {
                 if(first !== this.data[r][c]) {
@@ -84,7 +108,7 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.winner = first === O_MARK ? O_USER: X_USER;
+                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
         }
@@ -106,7 +130,7 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.winner = first === O_MARK ? O_USER: X_USER;
+                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
         }
@@ -121,9 +145,28 @@ export class GameStatus {
                 }
             }
             if(isAnyLineSame) {
-                this.winner = first === O_MARK ? O_USER: X_USER;
+                this.applyResult(first === O_MARK ? RESULT_WIN_O:RESULT_WIN_X);
                 return true;
             }
+        }
+
+        // check draw
+        let isDraw = true;
+        for(let r = 0; r < this.size; r++) {
+            for(let c = 0; c < this.size; c++) {
+                if(this.data[r][c] === EMPTY_MARK){
+                    isDraw = false;
+                    break;
+                }
+            }
+            if(!isDraw){
+                break;
+            }
+        }
+
+        if(isDraw) {
+            this.applyResult(RESULT_DRAW);
+            return true;
         }
         
         return false;

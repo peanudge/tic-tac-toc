@@ -5,25 +5,28 @@ export class InformationView {
         this.template = template;
     }
 
-    show(scores, winner = "") {
+    show(score, winner = "") {
         this.element.innerHTML = 
-            this.template.getScores(scores) +
+            this.template.getScores(score) +
             this.template.getWinner(winner); 
     }
 }
 
 class Template {
-    getScores(scores) {
-        return `<h2>
-            ${scores[0]}
-            <span>:</span>
-            ${scores[1]}
-        </h2>`;
+    getScores(score) {
+        console.log(score);
+        return `<div class="score-panel">
+            <h1 class="score">
+                ${score['O']} 
+                <span>:</span>
+                ${score['X']}
+            </h1>
+        </div>`;
     }
 
     getWinner(name){
         if(name === "X" || name === "O"){
-            return `<h2>${name}가 승리했습니다.</h2>`
+            return `<h2>"${name}"가 승리했습니다.</h2>`
         } else if(name === "DRAW") {
             return `<h2>비겼습니다.</h2>`
         } else {
